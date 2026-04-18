@@ -1,5 +1,5 @@
 import { PHASES, SURGERY_DATE } from '../data/phases'
-import { daysSince, todayKey } from '../hooks/useStorage'
+import { daysSince, todayKey } from '../hooks/useDb'
 import styles from './Header.module.css'
 
 function getCurrentPhase() {
@@ -23,8 +23,8 @@ export default function Header() {
         )}
       </div>
       <div className={styles.center}>
-        <div className={styles.dayCount}>{days >= 0 ? days : '—'}</div>
-        <div className={styles.dayLabel}>Days Since Surgery</div>
+        <div className={styles.dayCount}>{Math.abs(days)}</div>
+        <div className={styles.dayLabel}>{days >= 0 ? 'Days Since Surgery' : 'Days Until Surgery'}</div>
       </div>
       <div className={styles.right}>
         <div className={styles.date}>{date}</div>
