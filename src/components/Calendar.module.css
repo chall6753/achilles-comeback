@@ -73,7 +73,13 @@
   border-radius: 2px;
 }
 
-/* Back button shown above DayView when a day is selected */
+/* Day navigation bar (back + prev/next arrows) */
+.dayNav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
 .backBtn {
   background: #F4F6F9;
   border: none;
@@ -83,6 +89,32 @@
   font-size: .85rem;
   color: #333;
   cursor: pointer;
-  margin-bottom: 14px;
 }
 .backBtn:hover { background: #E8ECEF; }
+.dayNavArrows {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.dayNavLabel {
+  font-size: .85rem;
+  font-weight: 600;
+  color: #555;
+  min-width: 110px;
+  text-align: center;
+}
+.arrowBtn {
+  background: #F4F6F9;
+  border: none;
+  border-radius: 8px;
+  width: 34px;
+  height: 34px;
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+  color: #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.arrowBtn:hover { background: #E8ECEF; }

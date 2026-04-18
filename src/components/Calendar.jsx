@@ -97,16 +97,27 @@ export default function Calendar() {
   const [selectedDate, setSelectedDate] = useState(null)
   const tasksByDate = useTasksByDate()
 
+  function shiftDay(iso, delta) {
+    const d = new Date(iso + 'T00:00:00Z')
+    d.setUTCDate(d.getUTCDate() + delta)
+    return toISO(d)
+  }
+
   if (selectedDate) {
     return (
       <div>
-        <button
-          type="button"
-          className={styles.backBtn}
-          onClick={() => setSelectedDate(null)}
-        >
-          ← Back to calendar
-        </button>
+        <div className={styles.dayNav}>
+          <button type="button" className={styles.backBtn} onClick={() => setSelectedDate(null)}>
+            ← Calendar
+          </button>
+          <div className={styles.dayNavArrows}>
+            <button type="button" className={styles.arrowBtn} onClick={() => setSelectedDate(d => shiftDay(d, -1))}>‹</button>
+            <span className={styles.dayNavLabel}>
+              {new Date(selectedDate + 'T00:00:00Z').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', timeZone: 'UTC' })}
+            </span>
+            <button type="button" className={styles.arrowBtn} onClick={() => setSelectedDate(d => shiftDay(d, 1))}>›</button>
+          </div>
+        </div>
         <DayView date={selectedDate} />
       </div>
     )
