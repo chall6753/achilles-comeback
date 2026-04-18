@@ -1,3 +1,54 @@
+/* Pre-surgery section */
+.preSurgeryCard {
+  background: #fff;
+  border-radius: 12px;
+  padding: 22px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.07);
+  margin-bottom: 20px;
+  border: 2px solid transparent;
+}
+.preSurgeryHeader { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; }
+.preSurgeryTitle  { font-size: 1rem; font-weight: 800; color: #1A1A2E; }
+.preSurgeryDates  { font-size: .75rem; color: #888; margin-top: 3px; }
+
+.preDayGrid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
+
+.preDayOuter { display: flex; flex-direction: column; gap: 0; }
+
+.preDayCard {
+  width: 100%;
+  text-align: left;
+  border-radius: 10px;
+  padding: 12px 10px;
+  border: 2px solid transparent;
+  background: #F8F9FA;
+  font-size: .78rem;
+  cursor: pointer;
+  transition: box-shadow .15s, border-color .15s;
+}
+.preDayCard:hover  { box-shadow: 0 3px 10px rgba(0,0,0,.1); }
+.preDayCurrent     { background: #FFF8EC; box-shadow: 0 3px 10px rgba(0,0,0,.1); }
+.preDayPast        { opacity: .6; }
+.preDayFuture      { opacity: .45; }
+.preDayOpen        { border-radius: 10px 10px 0 0; }
+
+.preDayLabel   { font-weight: 800; color: #1A1A2E; margin-bottom: 2px; font-size: .75rem; }
+.preDayBadge   { font-size: .68rem; color: #F39C12; font-weight: 600; margin-bottom: 8px; }
+.preDayGoals   { display: flex; flex-direction: column; gap: 3px; }
+.preDayGoalItem { font-size: .7rem; color: #555; line-height: 1.4; }
+.preDayMore    { font-size: .68rem; color: #aaa; margin-top: 4px; }
+
+.preDayExpanded {
+  background: #fff;
+  border: 2px solid;
+  border-top: none;
+  border-radius: 0 0 10px 10px;
+  padding: 14px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
 .overallCard { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 4px rgba(0,0,0,.07); margin-bottom: 20px; }
 .overallTop  { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 12px; }
 .overallTitle { font-size: 1.1rem; font-weight: 700; }
@@ -9,10 +60,43 @@
 
 .phaseGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 24px; }
 
-.phaseCard { border-radius: 12px; padding: 18px; border: 2px solid; transition: all .2s; }
+.phaseCard {
+  width: 100%;
+  text-align: left;
+  border-radius: 12px;
+  padding: 18px;
+  border: 2px solid;
+  transition: all .2s;
+  cursor: pointer;
+  position: relative;
+}
+.phaseCard:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(0,0,0,.1); }
 .current   { box-shadow: 0 4px 16px rgba(0,0,0,.12); }
 .past      { opacity: .75; }
 .future    { opacity: .5; }
+
+.phaseHint {
+  position: absolute;
+  bottom: 14px;
+  right: 14px;
+  font-size: .7rem;
+  color: #aaa;
+}
+
+.phaseExpanded {
+  background: #fff;
+  border: 2px solid;
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 8px;
+}
+
+.phaseExpandedGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 12px;
+}
 
 .phaseShort  { font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .8px; margin-bottom: 4px; }
 .phaseName   { font-size: 1rem; font-weight: 800; color: #1A1A2E; margin-bottom: 4px; }
@@ -24,13 +108,11 @@
 .badge_past    { background: #E8F5E9; color: #2E7D32; }
 .badge_future  { background: #F3F4F6; color: #888; }
 
-.goalsSection      { }
-.goalsSectionTitle { font-size: .82rem; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: #888; margin-bottom: 14px; }
-.goalsGrid  { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-.goalCard   { background: #fff; border-radius: 12px; padding: 18px; box-shadow: 0 1px 4px rgba(0,0,0,.07); }
-.goalCat    { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .6px; margin-bottom: 10px; }
-.goalItem   { font-size: .88rem; color: #444; padding: 5px 0; border-bottom: 1px solid #F5F5F5; line-height: 1.4; }
-.goalItem:last-child { border: none; }
+/* Shared expanded content styles */
+.expandedTitle    { font-size: .82rem; font-weight: 800; color: #1A1A2E; margin-bottom: 10px; }
+.expandedCat      { display: flex; flex-direction: column; gap: 4px; }
+.expandedCatLabel { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: #888; margin-bottom: 4px; }
+.expandedItem     { font-size: .82rem; color: #444; line-height: 1.45; }
 
-@media (max-width: 900px) { .phaseGrid { grid-template-columns: 1fr 1fr; } }
-@media (max-width: 600px) { .phaseGrid, .goalsGrid { grid-template-columns: 1fr; } }
+@media (max-width: 900px) { .phaseGrid { grid-template-columns: 1fr 1fr; } .preDayGrid { grid-template-columns: repeat(3, 1fr); } .phaseExpandedGrid { grid-template-columns: 1fr; } }
+@media (max-width: 600px) { .phaseGrid { grid-template-columns: 1fr; } .preDayGrid { grid-template-columns: repeat(2, 1fr); } .phaseExpandedGrid { grid-template-columns: 1fr; } }
