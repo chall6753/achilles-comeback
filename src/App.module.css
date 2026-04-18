@@ -1,0 +1,39 @@
+.app { min-height: 100vh; display: flex; flex-direction: column; }
+
+.nav {
+  background: #fff;
+  border-bottom: 1px solid #E8ECEF;
+  display: flex;
+  padding: 0 28px;
+  gap: 4px;
+  position: sticky;
+  top: 65px;
+  z-index: 99;
+}
+
+.navBtn {
+  padding: 14px 20px;
+  font-size: .85rem;
+  font-weight: 600;
+  color: #888;
+  border: none;
+  background: none;
+  border-bottom: 2px solid transparent;
+  transition: all .2s;
+}
+.navBtn:hover { color: #1A1A2E; }
+.navBtn.active { color: #1A1A2E; border-bottom-color: #E94560; }
+
+.main {
+  padding: 24px 28px;
+  max-width: 1300px;
+  margin: 0 auto;
+  width: 100%;
+  flex: 1;
+}
+
+@media (max-width: 600px) {
+  .nav { padding: 0 12px; }
+  .navBtn { padding: 12px 10px; font-size: .78rem; }
+  .main { padding: 16px; }
+}

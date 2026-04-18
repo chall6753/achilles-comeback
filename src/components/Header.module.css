@@ -1,0 +1,26 @@
+.header {
+  background: #1A1A2E;
+  color: #fff;
+  padding: 16px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0,0,0,.2);
+}
+.left   { display: flex; align-items: center; gap: 12px; }
+.title  { font-size: 1.05rem; font-weight: 700; letter-spacing: .5px; }
+.badge  { padding: 4px 12px; border-radius: 20px; font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; }
+.center { text-align: center; }
+.dayCount { font-size: 2rem; font-weight: 800; line-height: 1; }
+.dayLabel { font-size: .72rem; color: #aaa; margin-top: 2px; }
+.right  { text-align: right; }
+.date   { font-size: .82rem; color: #ccc; }
+.mantra { font-size: .68rem; color: #E94560; margin-top: 4px; font-style: italic; }
+
+@media (max-width: 700px) {
+  .header { flex-direction: column; gap: 8px; padding: 12px 16px; }
+  .right, .left, .center { text-align: center; }
+}

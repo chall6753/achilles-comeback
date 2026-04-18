@@ -1,0 +1,27 @@
+.streakRow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px; }
+.streakCard { background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,.07); text-align: center; }
+.streakIcon { font-size: 1.5rem; margin-bottom: 8px; }
+.streakNum  { font-size: 2.4rem; font-weight: 800; color: #E94560; line-height: 1; }
+.streakLabel { font-size: .72rem; color: #888; margin-top: 6px; text-transform: uppercase; letter-spacing: .4px; }
+
+.inputCard  { background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,.07); margin-bottom: 20px; }
+.inputTitle { font-size: .85rem; font-weight: 700; margin-bottom: 14px; }
+.inputGrid  { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin-bottom: 16px; }
+.inputGroup label { display: block; font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: #888; margin-bottom: 6px; }
+.inputGroup input { width: 100%; padding: 10px 12px; border: 1px solid #E0E3E8; border-radius: 8px; font-size: .95rem; font-weight: 600; }
+.inputGroup input:focus { outline: none; border-color: #E94560; }
+.saveBtn { padding: 10px 24px; background: #1A1A2E; color: #fff; border: none; border-radius: 8px; font-size: .9rem; font-weight: 700; margin-right: 12px; }
+.saveBtn:hover { background: #2d2d4e; }
+.toast { font-size: .85rem; color: #27AE60; font-weight: 600; opacity: 0; transition: opacity .3s; }
+
+.chartsGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+.chartCard  { background: #fff; border-radius: 12px; padding: 18px; box-shadow: 0 1px 4px rgba(0,0,0,.07); }
+.chartTitle { font-size: .85rem; font-weight: 700; margin-bottom: 12px; }
+
+.journalCard  { background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,.07); }
+.journalTitle { font-size: .85rem; font-weight: 700; margin-bottom: 12px; }
+.journalArea  { width: 100%; min-height: 120px; padding: 12px; border: 1px solid #E0E3E8; border-radius: 8px; font-size: .9rem; resize: vertical; }
+.journalArea:focus { outline: none; border-color: #E94560; }
+
+@media (max-width: 900px) { .streakRow { grid-template-columns: 1fr 1fr; } .chartsGrid { grid-template-columns: 1fr; } .inputGrid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 600px) { .streakRow, .inputGrid { grid-template-columns: 1fr 1fr; } }

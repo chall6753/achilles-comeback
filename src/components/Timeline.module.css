@@ -1,0 +1,36 @@
+.overallCard { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 4px rgba(0,0,0,.07); margin-bottom: 20px; }
+.overallTop  { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 12px; }
+.overallTitle { font-size: 1.1rem; font-weight: 700; }
+.overallSub   { font-size: .82rem; color: #888; margin-top: 4px; }
+.overallPct   { font-size: 2.2rem; font-weight: 800; color: #E94560; }
+
+.bar     { background: #EAECEF; border-radius: 999px; height: 7px; overflow: hidden; }
+.barFill { height: 100%; border-radius: 999px; transition: width .4s ease; }
+
+.phaseGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 24px; }
+
+.phaseCard { border-radius: 12px; padding: 18px; border: 2px solid; transition: all .2s; }
+.current   { box-shadow: 0 4px 16px rgba(0,0,0,.12); }
+.past      { opacity: .75; }
+.future    { opacity: .5; }
+
+.phaseShort  { font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .8px; margin-bottom: 4px; }
+.phaseName   { font-size: 1rem; font-weight: 800; color: #1A1A2E; margin-bottom: 4px; }
+.phaseDates  { font-size: .72rem; color: #666; margin-bottom: 8px; }
+.phaseWin    { font-size: .75rem; color: #444; line-height: 1.4; font-style: italic; margin-bottom: 10px; }
+
+.statusBadge  { font-size: .72rem; font-weight: 700; padding: 3px 10px; border-radius: 20px; display: inline-block; }
+.badge_current { background: #1A1A2E; color: #fff; }
+.badge_past    { background: #E8F5E9; color: #2E7D32; }
+.badge_future  { background: #F3F4F6; color: #888; }
+
+.goalsSection      { }
+.goalsSectionTitle { font-size: .82rem; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: #888; margin-bottom: 14px; }
+.goalsGrid  { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.goalCard   { background: #fff; border-radius: 12px; padding: 18px; box-shadow: 0 1px 4px rgba(0,0,0,.07); }
+.goalCat    { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .6px; margin-bottom: 10px; }
+.goalItem   { font-size: .88rem; color: #444; padding: 5px 0; border-bottom: 1px solid #F5F5F5; line-height: 1.4; }
+.goalItem:last-child { border: none; }
+
+@media (max-width: 900px) { .phaseGrid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 600px) { .phaseGrid, .goalsGrid { grid-template-columns: 1fr; } }

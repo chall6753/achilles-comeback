@@ -1,0 +1,35 @@
+.preSurgery { text-align: center; padding: 60px 20px; }
+.preSurgeryIcon { font-size: 3rem; margin-bottom: 16px; }
+.preSurgeryTitle { font-size: 1.3rem; font-weight: 700; }
+.preSurgerySub { color: #888; margin-top: 8px; }
+
+.dayHeader { background: #1A1A2E; border-radius: 12px; padding: 20px 24px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+.dayName   { font-size: 1.25rem; font-weight: 800; color: #fff; }
+.dayBadge  { font-size: .82rem; color: #E94560; font-weight: 600; margin-top: 4px; }
+.dayProgress { text-align: right; }
+.dayPct    { font-size: 1.8rem; font-weight: 800; color: #fff; }
+.dayPctLabel { font-size: .72rem; color: #aaa; }
+
+.progressWrap { background: #E8ECEF; border-radius: 999px; height: 7px; overflow: hidden; margin-bottom: 20px; }
+.progressBar  { height: 100%; border-radius: 999px; background: #E94560; transition: width .4s ease; }
+
+.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 20px; }
+
+.section { background: #fff; border-radius: 12px; padding: 18px; box-shadow: 0 1px 4px rgba(0,0,0,.07); }
+.sectionHeader { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid #F0F0F0; }
+.sectionIcon   { font-size: 1.2rem; }
+.sectionTitle  { font-size: .95rem; font-weight: 700; flex: 1; }
+.sectionCount  { font-size: .75rem; color: #aaa; }
+
+.taskItem { display: flex; align-items: flex-start; gap: 10px; padding: 9px 0; border-bottom: 1px solid #F8F8F8; }
+.taskItem:last-child { border-bottom: none; }
+.taskItem input { margin-top: 2px; width: 16px; height: 16px; accent-color: #E94560; flex-shrink: 0; cursor: pointer; }
+.taskItem label { font-size: .88rem; color: #333; line-height: 1.5; cursor: pointer; }
+.done label { text-decoration: line-through; color: #bbb; }
+
+.notesCard  { background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,.07); }
+.notesTitle { font-size: .85rem; font-weight: 700; margin-bottom: 12px; }
+.notesArea  { width: 100%; min-height: 100px; padding: 12px; border: 1px solid #E0E3E8; border-radius: 8px; font-size: .9rem; resize: vertical; }
+.notesArea:focus { outline: none; border-color: #E94560; }
+
+@media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
