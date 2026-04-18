@@ -14,7 +14,16 @@ import {
   daysSince,
 } from '../hooks/useDb'
 import NoteEditor from './NoteEditor'
+import { buildSections } from '../data/dailyTasks'
 import styles from './Stats.module.css'
+
+function getMentalPrompt(date, taskId) {
+  const sections = buildSections(date)
+  const mental = sections.find(s => s.isMental)
+  if (!mental) return null
+  const idx = parseInt(taskId.replace(/^\D+/, ''), 10)
+  return mental.items[idx] ?? null
+}
 
 Chart.register(LineController, LineElement, PointElement, LinearScale, CategoryScale, Filler, Tooltip)
 
@@ -184,9 +193,15 @@ export default function Stats() {
                 <div className={styles.mindDayLabel}>
                   {new Date(date + 'T00:00:00Z').toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', timeZone: 'UTC' })}
                 </div>
-                {Object.values(mentalByDate[date]).map((response, i) => (
-                  <div key={i} className={styles.mindEntry}>"{response}"</div>
-                ))}
+                {Object.entries(mentalByDate[date]).map(([taskId, response]) => {
+                  const prompt = getMentalPrompt(date, taskId)
+                  return (
+                    <div key={taskId} className={styles.mindEntry}>
+                      {prompt && <div className={styles.mindPrompt}>{prompt}</div>}
+                      <div className={styles.mindResponse}>"{response}"</div>
+                    </div>
+                  )
+                })}
               </div>
             ))}
           </div>
