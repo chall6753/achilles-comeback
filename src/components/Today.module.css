@@ -16,7 +16,7 @@
 .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 20px; }
 
 .section { background: #fff; border-radius: 12px; padding: 18px; box-shadow: 0 1px 4px rgba(0,0,0,.07); }
-.sectionHeader { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid #F0F0F0; }
+.sectionHeader { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid #F0F0F0; flex-wrap: wrap; }
 .sectionIcon   { font-size: 1.2rem; }
 .sectionTitle  { font-size: .95rem; font-weight: 700; flex: 1; }
 .sectionCount  { font-size: .75rem; color: #aaa; }
@@ -31,6 +31,28 @@
 .notesTitle { font-size: .85rem; font-weight: 700; margin-bottom: 12px; }
 .notesArea  { width: 100%; min-height: 100px; padding: 12px; border: 1px solid #E0E3E8; border-radius: 8px; font-size: .9rem; resize: vertical; }
 .notesArea:focus { outline: none; border-color: #E94560; }
+
+/* Edit mode */
+.editBtn { margin-left: auto; background: none; border: 1px solid #E0E3E8; border-radius: 6px; padding: 2px 10px; font-size: .72rem; font-weight: 600; color: #888; cursor: pointer; }
+.editBtn:hover { background: #F4F6F9; color: #333; }
+.editBtnActive { background: #1A1A2E; color: #fff; border-color: #1A1A2E; }
+.editBtnActive:hover { background: #2d2d4e; }
+
+.editList  { display: flex; flex-direction: column; gap: 6px; padding-top: 4px; }
+.editRow   { display: flex; align-items: center; gap: 8px; }
+.editInput {
+  flex: 1;
+  padding: 7px 10px;
+  border: 1px solid #E0E3E8;
+  border-radius: 6px;
+  font-size: .87rem;
+  font-family: inherit;
+}
+.editInput:focus { outline: none; border-color: #E94560; }
+.deleteBtn { background: none; border: none; color: #ccc; font-size: .9rem; cursor: pointer; padding: 4px 6px; border-radius: 4px; flex-shrink: 0; }
+.deleteBtn:hover { color: #E74C3C; background: #FEF0F0; }
+.addBtn { margin-top: 4px; background: none; border: 1px dashed #D0D3D8; border-radius: 6px; padding: 7px 12px; font-size: .82rem; color: #888; cursor: pointer; width: 100%; text-align: left; }
+.addBtn:hover { background: #F8F9FA; color: #333; border-color: #aaa; }
 
 /* Mental task items */
 .mentalItem { padding: 10px 0; border-bottom: 1px solid #F8F8F8; }

@@ -111,8 +111,23 @@
 /* Shared expanded content styles */
 .expandedTitle    { font-size: .82rem; font-weight: 800; color: #1A1A2E; margin-bottom: 10px; }
 .expandedCat      { display: flex; flex-direction: column; gap: 4px; }
-.expandedCatLabel { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: #888; margin-bottom: 4px; }
+.expandedCatHeader { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+.expandedCatLabel { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: #888; }
 .expandedItem     { font-size: .82rem; color: #444; line-height: 1.45; }
+
+/* Timeline inline edit controls */
+.tlEditBtn { background: none; border: 1px solid #E0E3E8; border-radius: 5px; padding: 2px 8px; font-size: .68rem; font-weight: 600; color: #aaa; cursor: pointer; }
+.tlEditBtn:hover { background: #F4F6F9; color: #555; }
+.tlEditBtnActive { background: #1A1A2E; color: #fff; border-color: #1A1A2E; }
+.tlEditBtnActive:hover { background: #2d2d4e; }
+.tlEditList  { display: flex; flex-direction: column; gap: 5px; margin-top: 4px; }
+.tlEditRow   { display: flex; align-items: center; gap: 6px; }
+.tlEditInput { flex: 1; padding: 5px 8px; border: 1px solid #E0E3E8; border-radius: 5px; font-size: .8rem; font-family: inherit; }
+.tlEditInput:focus { outline: none; border-color: #E94560; }
+.tlDeleteBtn { background: none; border: none; color: #ccc; cursor: pointer; padding: 3px 5px; border-radius: 3px; font-size: .85rem; flex-shrink: 0; }
+.tlDeleteBtn:hover { color: #E74C3C; background: #FEF0F0; }
+.tlAddBtn { background: none; border: 1px dashed #D0D3D8; border-radius: 5px; padding: 5px 10px; font-size: .78rem; color: #888; cursor: pointer; width: 100%; text-align: left; margin-top: 2px; }
+.tlAddBtn:hover { background: #F8F9FA; color: #333; }
 
 @media (max-width: 900px) { .phaseGrid { grid-template-columns: 1fr 1fr; } .preDayGrid { grid-template-columns: repeat(3, 1fr); } .phaseExpandedGrid { grid-template-columns: 1fr; } }
 @media (max-width: 600px) { .phaseGrid { grid-template-columns: 1fr; } .preDayGrid { grid-template-columns: repeat(2, 1fr); } .phaseExpandedGrid { grid-template-columns: 1fr; } }

@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import {
   useTasksForDate,
   toggleTask,
@@ -5,6 +6,8 @@ import {
   setNote,
   useMentalResponsesForDate,
   setMentalResponse,
+  useDayTaskOverrides,
+  setDayTaskOverride,
   todayKey,
   daysSince,
 } from '../hooks/useDb'
@@ -18,93 +21,113 @@ import styles from './Today.module.css'
 
 const SURGERY = '2026-04-24'
 
-function TaskItem({ text, checked, onChange }) {
-  return (
-    <div className={`${styles.taskItem} ${checked ? styles.done : ''}`}>
-      <input type="checkbox" checked={checked} onChange={onChange} />
-      <label onClick={onChange}>{text}</label>
-    </div>
-  )
-}
-
-function TaskSection({ icon, title, items, prefix, saved, onToggle }) {
-  const done = items.filter((_, i) => saved[prefix + i]).length
-  return (
-    <div className={styles.section}>
-      <div className={styles.sectionHeader}>
-        <span className={styles.sectionIcon}>{icon}</span>
-        <span className={styles.sectionTitle}>{title}</span>
-        <span className={styles.sectionCount}>{done}/{items.length}</span>
-      </div>
-      {items.map((item, i) => (
-        <TaskItem
-          key={i}
-          text={item}
-          checked={!!saved[prefix + i]}
-          onChange={() => onToggle(prefix + i)}
-        />
-      ))}
-    </div>
-  )
-}
-
-function MentalTaskSection({ icon, title, items, prefix, saved, onToggle, responses, onResponse }) {
-  const done = items.filter((_, i) => saved[prefix + i]).length
-  return (
-    <div className={styles.section}>
-      <div className={styles.sectionHeader}>
-        <span className={styles.sectionIcon}>{icon}</span>
-        <span className={styles.sectionTitle}>{title}</span>
-        <span className={styles.sectionCount}>{done}/{items.length}</span>
-      </div>
-      {items.map((item, i) => {
-        const taskId = prefix + i
-        return (
-          <div key={i} className={`${styles.mentalItem} ${saved[taskId] ? styles.done : ''}`}>
-            <div className={styles.mentalTop}>
-              <input type="checkbox" checked={!!saved[taskId]} onChange={() => onToggle(taskId)} />
-              <label onClick={() => onToggle(taskId)}>{item}</label>
-            </div>
-            <input
-              className={styles.mentalInput}
-              type="text"
-              placeholder="Your response..."
-              value={responses[taskId] || ''}
-              onChange={e => onResponse(taskId, e.target.value)}
-            />
-          </div>
-        )
-      })}
-    </div>
-  )
-}
-
 /**
- * Renders the task list + notes for a single date.
- *
- * Used by the Today tab (date = todayKey()) and by the Calendar tab
- * when a user clicks a day cell.
+ * Single section component handling both regular and mental tasks,
+ * with an inline edit mode for full task list control.
  */
+function EditableSection({ section, date, overrideItems, saved, onToggle, responses, onResponse }) {
+  const [isEditing, setIsEditing] = useState(false)
+  const items = overrideItems ?? section.items
+  const done  = items.filter((_, i) => saved[section.prefix + i]).length
+
+  function handleChange(idx, val) {
+    const next = items.map((it, i) => i === idx ? val : it)
+    setDayTaskOverride(date, section.prefix, next)
+  }
+
+  function handleDelete(idx) {
+    setDayTaskOverride(date, section.prefix, items.filter((_, i) => i !== idx))
+  }
+
+  function handleAdd() {
+    setDayTaskOverride(date, section.prefix, [...items, ''])
+  }
+
+  return (
+    <div className={styles.section}>
+      <div className={styles.sectionHeader}>
+        <span className={styles.sectionIcon}>{section.icon}</span>
+        <span className={styles.sectionTitle}>{section.title}</span>
+        {!isEditing && <span className={styles.sectionCount}>{done}/{items.length}</span>}
+        <button
+          type="button"
+          className={`${styles.editBtn} ${isEditing ? styles.editBtnActive : ''}`}
+          onClick={() => setIsEditing(e => !e)}
+        >
+          {isEditing ? 'Done' : 'Edit'}
+        </button>
+      </div>
+
+      {isEditing ? (
+        <div className={styles.editList}>
+          {items.map((item, i) => (
+            <div key={i} className={styles.editRow}>
+              <input
+                className={styles.editInput}
+                value={item}
+                onChange={e => handleChange(i, e.target.value)}
+                placeholder="Task description..."
+              />
+              <button type="button" className={styles.deleteBtn} onClick={() => handleDelete(i)}>✕</button>
+            </div>
+          ))}
+          <button type="button" className={styles.addBtn} onClick={handleAdd}>+ Add task</button>
+        </div>
+      ) : (
+        <>
+          {items.map((item, i) => {
+            const taskId = section.prefix + i
+            if (section.isMental) {
+              return (
+                <div key={i} className={`${styles.mentalItem} ${saved[taskId] ? styles.done : ''}`}>
+                  <div className={styles.mentalTop}>
+                    <input type="checkbox" checked={!!saved[taskId]} onChange={() => onToggle(taskId)} />
+                    <label onClick={() => onToggle(taskId)}>{item}</label>
+                  </div>
+                  <input
+                    className={styles.mentalInput}
+                    type="text"
+                    placeholder="Your response..."
+                    value={responses?.[taskId] || ''}
+                    onChange={e => onResponse?.(taskId, e.target.value)}
+                  />
+                </div>
+              )
+            }
+            return (
+              <div key={i} className={`${styles.taskItem} ${saved[taskId] ? styles.done : ''}`}>
+                <input type="checkbox" checked={!!saved[taskId]} onChange={() => onToggle(taskId)} />
+                <label onClick={() => onToggle(taskId)}>{item}</label>
+              </div>
+            )
+          })}
+        </>
+      )}
+    </div>
+  )
+}
+
 export default function DayView({ date }) {
   const tasksForDay  = useTasksForDate(date)
   const mentalResps  = useMentalResponsesForDate(date)
-  const note = useNote(date)
-  const dayData = DAILY_TASKS[date]
-  const phase = getPhaseFor(date)
-  const days = daysSince(SURGERY)
-  const isToday = date === todayKey()
+  const overrides    = useDayTaskOverrides(date)
+  const note         = useNote(date)
+  const dayData      = DAILY_TASKS[date]
+  const phase        = getPhaseFor(date)
+  const days         = daysSince(SURGERY)
+  const isToday      = date === todayKey()
 
-  const sections = buildSections(date)
-  const allItems = sections.flatMap(s => s.items)
-  const totalDone = sections.reduce(
-    (acc, s) => acc + s.items.filter((_, i) => tasksForDay[s.prefix + i]).length,
-    0,
-  )
-  const totalAll = allItems.length
-  const pct = totalAll > 0 ? Math.round(totalDone / totalAll * 100) : 0
+  const baseSections = buildSections(date)
+  // Merge overrides: replace items if an override exists for that prefix
+  const sections = baseSections.map(s => ({
+    ...s,
+    items: overrides[s.prefix] ?? s.items,
+  }))
 
-  // Pre-surgery splash — only on the actual current day, before surgery,
-  // when no per-day data and no phase apply.
+  const totalDone = sections.reduce((acc, s) => acc + s.items.filter((_, i) => tasksForDay[s.prefix + i]).length, 0)
+  const totalAll  = sections.reduce((acc, s) => acc + s.items.length, 0)
+  const pct       = totalAll > 0 ? Math.round(totalDone / totalAll * 100) : 0
+
   if (isToday && !dayData && !phase && date < SURGERY) {
     return (
       <div className={styles.preSurgery}>
@@ -115,11 +138,9 @@ export default function DayView({ date }) {
     )
   }
 
-  // For non-today dates with no scheduled content, give a quiet empty state
-  // rather than the countdown screen.
   if (!dayData && !phase) {
-    const friendly = new Date(date).toLocaleDateString('en-US', {
-      weekday: 'long', month: 'long', day: 'numeric', year: 'numeric',
+    const friendly = new Date(date + 'T00:00:00Z').toLocaleDateString('en-US', {
+      weekday: 'long', month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC',
     })
     return (
       <div className={styles.preSurgery}>
@@ -130,15 +151,8 @@ export default function DayView({ date }) {
     )
   }
 
-  // Header label/badge: prefer explicit day record, fall back to phase text.
-  const headerLabel = dayData
-    ? dayData.label
-    : phase
-      ? `Day ${days} — ${phase.name}`
-      : ''
-  const headerBadge = dayData
-    ? dayData.badge
-    : phase?.obj || ''
+  const headerLabel = dayData ? dayData.label : phase ? `Day ${days} — ${phase.name}` : ''
+  const headerBadge = dayData ? dayData.badge : phase?.obj || ''
 
   return (
     <div>
@@ -158,31 +172,18 @@ export default function DayView({ date }) {
       </div>
 
       <div className={styles.grid}>
-        {sections.map(s =>
-          s.isMental ? (
-            <MentalTaskSection
-              key={s.prefix}
-              icon={s.icon}
-              title={s.title}
-              items={s.items}
-              prefix={s.prefix}
-              saved={tasksForDay}
-              onToggle={(key) => toggleTask(date, key)}
-              responses={mentalResps}
-              onResponse={(taskId, val) => setMentalResponse(date, taskId, val)}
-            />
-          ) : (
-            <TaskSection
-              key={s.prefix}
-              icon={s.icon}
-              title={s.title}
-              items={s.items}
-              prefix={s.prefix}
-              saved={tasksForDay}
-              onToggle={(key) => toggleTask(date, key)}
-            />
-          )
-        )}
+        {sections.map(s => (
+          <EditableSection
+            key={s.prefix}
+            section={s}
+            date={date}
+            overrideItems={overrides[s.prefix]}
+            saved={tasksForDay}
+            onToggle={key => toggleTask(date, key)}
+            responses={mentalResps}
+            onResponse={(taskId, val) => setMentalResponse(date, taskId, val)}
+          />
+        ))}
       </div>
 
       <div className={styles.notesCard}>

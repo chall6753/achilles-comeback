@@ -215,6 +215,54 @@ export function useMentalResponsesByDate() {
   )
 }
 
+/* ------------------------------------------------------------------ */
+/* day task overrides                                                  */
+/* ------------------------------------------------------------------ */
+
+/** { [prefix]: string[] } for a given date — custom task lists. */
+export function useDayTaskOverrides(date) {
+  return useLiveQuery(
+    async () => {
+      const rows = await db.dayTaskOverrides.where('date').equals(date).toArray()
+      const map = {}
+      for (const r of rows) map[r.prefix] = r.items
+      return map
+    },
+    [date],
+    {},
+  )
+}
+
+export async function setDayTaskOverride(date, prefix, items) {
+  if (items.length === 0) {
+    await db.dayTaskOverrides.delete([date, prefix])
+  } else {
+    await db.dayTaskOverrides.put({ date, prefix, items })
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* phase goal overrides                                                */
+/* ------------------------------------------------------------------ */
+
+/** { [cat]: string[] } for a given phaseId. */
+export function usePhaseGoalOverrides(phaseId) {
+  return useLiveQuery(
+    async () => {
+      const rows = await db.phaseGoalOverrides.where('phaseId').equals(phaseId).toArray()
+      const map = {}
+      for (const r of rows) map[r.cat] = r.items
+      return map
+    },
+    [phaseId],
+    {},
+  )
+}
+
+export async function setPhaseGoalOverride(phaseId, cat, items) {
+  await db.phaseGoalOverrides.put({ phaseId, cat, items })
+}
+
 export async function setMentalResponse(date, taskId, response) {
   if (response && response.trim()) {
     await db.mentalResponses.put({ date, taskId, response })

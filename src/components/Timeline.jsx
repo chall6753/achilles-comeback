@@ -1,8 +1,56 @@
 import { useState } from 'react'
 import { PHASES } from '../data/phases'
 import PRE_SURGERY from '../data/preSurgeryTasks'
-import { todayKey } from '../hooks/useDb'
+import { todayKey, usePhaseGoalOverrides, setPhaseGoalOverride } from '../hooks/useDb'
 import styles from './Timeline.module.css'
+
+function EditableGoalCategory({ phaseId, cat, items, color }) {
+  const [isEditing, setIsEditing] = useState(false)
+
+  function handleChange(idx, val) {
+    setPhaseGoalOverride(phaseId, cat, items.map((it, i) => i === idx ? val : it))
+  }
+  function handleDelete(idx) {
+    setPhaseGoalOverride(phaseId, cat, items.filter((_, i) => i !== idx))
+  }
+  function handleAdd() {
+    setPhaseGoalOverride(phaseId, cat, [...items, ''])
+  }
+
+  return (
+    <div className={styles.expandedCat}>
+      <div className={styles.expandedCatHeader}>
+        <div className={styles.expandedCatLabel} style={{ color }}>{cat}</div>
+        <button
+          type="button"
+          className={`${styles.tlEditBtn} ${isEditing ? styles.tlEditBtnActive : ''}`}
+          onClick={() => setIsEditing(e => !e)}
+        >
+          {isEditing ? 'Done' : 'Edit'}
+        </button>
+      </div>
+
+      {isEditing ? (
+        <div className={styles.tlEditList}>
+          {items.map((item, i) => (
+            <div key={i} className={styles.tlEditRow}>
+              <input
+                className={styles.tlEditInput}
+                value={item}
+                onChange={e => handleChange(i, e.target.value)}
+                placeholder="Goal..."
+              />
+              <button type="button" className={styles.tlDeleteBtn} onClick={() => handleDelete(i)}>✕</button>
+            </div>
+          ))}
+          <button type="button" className={styles.tlAddBtn} onClick={handleAdd}>+ Add goal</button>
+        </div>
+      ) : (
+        items.map((g, i) => <div key={i} className={styles.expandedItem}>• {g}</div>)
+      )}
+    </div>
+  )
+}
 
 const SURGERY_DATE = '2026-04-24'
 const PRE_DAYS = Object.entries(PRE_SURGERY).sort(([a], [b]) => a.localeCompare(b))
@@ -95,6 +143,27 @@ function PreSurgerySection({ today }) {
   )
 }
 
+/* ── Phase expanded goals (needs own component for hook call) ─────── */
+function PhaseExpandedGoals({ phase }) {
+  const overrides = usePhaseGoalOverrides(phase.id)
+  return (
+    <div className={styles.phaseExpanded} style={{ borderColor: phase.color + '44' }}>
+      <div className={styles.expandedTitle} style={{ color: phase.color }}>{phase.name} — Goals</div>
+      <div className={styles.phaseExpandedGrid}>
+        {Object.entries(phase.goals).map(([cat, defaultItems]) => (
+          <EditableGoalCategory
+            key={cat}
+            phaseId={phase.id}
+            cat={cat}
+            items={overrides[cat] ?? defaultItems}
+            color={phase.color}
+          />
+        ))}
+      </div>
+    </div>
+  )
+}
+
 /* ── Phase helpers ────────────────────────────────────────────────── */
 function getPhaseStatus(p) {
   const t = todayKey()
@@ -178,19 +247,7 @@ export default function Timeline() {
               </button>
 
               {isOpen && (
-                <div className={styles.phaseExpanded} style={{ borderColor: p.color + '44' }}>
-                  <div className={styles.expandedTitle} style={{ color: p.color }}>{p.name} — Goals</div>
-                  <div className={styles.phaseExpandedGrid}>
-                    {Object.entries(p.goals).map(([cat, items]) => (
-                      <div key={cat} className={styles.expandedCat}>
-                        <div className={styles.expandedCatLabel} style={{ color: p.color }}>{cat}</div>
-                        {items.map((g, i) => (
-                          <div key={i} className={styles.expandedItem}>• {g}</div>
-                        ))}
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                <PhaseExpandedGoals phase={p} />
               )}
             </div>
           )
