@@ -1,0 +1,88 @@
+.wrap { background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,.07); }
+
+/* Month navigation */
+.monthNav { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
+.monthNav button { background: #F4F6F9; border: none; border-radius: 8px; padding: 7px 16px; font-weight: 600; font-size: .85rem; cursor: pointer; }
+.monthNav button:hover { background: #E8ECEF; }
+.monthLabel { flex: 1; text-align: center; font-size: 1.1rem; font-weight: 700; }
+
+/* Weekday header row */
+.headerRow { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-bottom: 6px; }
+.dayName { font-size: .7rem; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: .5px; text-align: center; padding: 6px 0; }
+
+/* 6×7 calendar grid */
+.grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+
+.cell {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  background: #F8F9FA;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  padding: 6px 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-align: left;
+  cursor: pointer;
+  transition: background .12s, border-color .12s, transform .1s;
+}
+.cell:hover { background: #EEF1F4; }
+.cell:active { transform: scale(.98); }
+
+.outOfMonth { opacity: .35; }
+.empty { background: #FBFBFC; }
+
+.today { border-color: #E94560; background: #FFF4F6; }
+.today:hover { background: #FFE9EC; }
+
+.surgery { background: #FDECEA; border-color: #E74C3C; }
+.surgery:hover { background: #F9DEDA; }
+
+.cellHeader { display: flex; align-items: flex-start; justify-content: space-between; }
+.dayNum { font-size: .9rem; font-weight: 700; color: #333; }
+.surgeryMark { font-size: .85rem; }
+
+/* Category completion bars */
+.bars { display: flex; flex-direction: column; gap: 3px; margin-top: auto; }
+.barTrack { height: 4px; background: #E6E8EB; border-radius: 2px; overflow: hidden; }
+.barFill { height: 100%; transition: width .2s; }
+
+/* Legend below the grid */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid #F0F0F0;
+  justify-content: center;
+}
+.legendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: .78rem;
+  font-weight: 600;
+  color: #666;
+}
+.legendItem i {
+  display: inline-block;
+  width: 12px;
+  height: 4px;
+  border-radius: 2px;
+}
+
+/* Back button shown above DayView when a day is selected */
+.backBtn {
+  background: #F4F6F9;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-weight: 600;
+  font-size: .85rem;
+  color: #333;
+  cursor: pointer;
+  margin-bottom: 14px;
+}
+.backBtn:hover { background: #E8ECEF; }
