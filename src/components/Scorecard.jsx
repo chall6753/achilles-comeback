@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { SCORECARD_HABITS } from '../data/phases'
-import { useLocalStorage } from '../hooks/useStorage'
+import { useScorecardWeek, toggleScorecard } from '../hooks/useDb'
 import styles from './Scorecard.module.css'
 
 const DAY_NAMES = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
@@ -17,15 +17,10 @@ function getWeekDates(offset = 0) {
 
 export default function Scorecard() {
   const [weekOffset, setWeekOffset] = useState(0)
-  const [sc, setSc] = useLocalStorage('scorecard', {})
 
   const dates = getWeekDates(weekOffset)
+  const sc = useScorecardWeek(dates)
   const label = `Week of ${new Date(dates[0]).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} – ${new Date(dates[6]).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`
-
-  function toggle(date, rowIdx) {
-    const key = `${date}_${rowIdx}`
-    setSc(prev => ({ ...prev, [key]: !prev[key] }))
-  }
 
   let rowIdx = 0
 
@@ -68,7 +63,7 @@ export default function Scorecard() {
                         const checked = !!sc[key]
                         return (
                           <td key={date} className={checked ? styles.checked : ''}>
-                            <input type="checkbox" checked={checked} onChange={() => toggle(date, ri)} />
+                            <input type="checkbox" checked={checked} onChange={() => toggleScorecard(date, ri)} />
                           </td>
                         )
                       })}

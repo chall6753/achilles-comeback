@@ -1,6 +1,17 @@
 import { useRef, useEffect } from 'react'
 import { Chart, LineController, LineElement, PointElement, LinearScale, CategoryScale, Filler, Tooltip } from 'chart.js'
-import { useLocalStorage, todayKey, daysSince } from '../hooks/useStorage'
+import {
+  useStatsByDate,
+  useStatsDraft,
+  setStatsDraft,
+  commitStatsDraft,
+  useNote,
+  useNotesByDate,
+  setNote,
+  useTasksByDate,
+  todayKey,
+  daysSince,
+} from '../hooks/useDb'
 import styles from './Stats.module.css'
 
 Chart.register(LineController, LineElement, PointElement, LinearScale, CategoryScale, Filler, Tooltip)
@@ -58,16 +69,22 @@ function MiniChart({ metric, data, labels }) {
 
 export default function Stats() {
   const t = todayKey()
-  const [statsData, setStatsData] = useLocalStorage('statsData', {})
-  const [notes, setNotes] = useLocalStorage('notes', {})
-  const [saved, setSaved] = useLocalStorage('inputs_' + t, {})
+  const statsData = useStatsByDate()
+  const draft     = useStatsDraft(t)
+  const note      = useNote(t)
+  const notes     = useNotesByDate()
+  const tasks     = useTasksByDate()
 
   const days = Math.max(0, daysSince(SURGERY))
   const recentKeys = Object.keys(statsData).sort().slice(-30)
   const labels = recentKeys.map(k => new Date(k).toLocaleDateString('en-US', { month: 'numeric', day: 'numeric' }))
 
+  function updateDraft(key, val) {
+    setStatsDraft(t, { ...draft, [key]: val })
+  }
+
   function save() {
-    setStatsData(prev => ({ ...prev, [t]: { ...saved } }))
+    commitStatsDraft(t, draft)
     const el = document.getElementById('toastMsg')
     if (el) { el.style.opacity = '1'; setTimeout(() => el.style.opacity = '0', 2000) }
   }
@@ -83,7 +100,6 @@ export default function Stats() {
     }
     return streak
   }
-  const [tasks] = useLocalStorage('tasks', {})
   const taskStreak    = calcStreak(k => Object.values(tasks[k] || {}).some(v => v))
   const journalStreak = calcStreak(k => (notes[k] || '').trim().length > 10)
   const proteinStreak = calcStreak(k => (statsData[k]?.protein || 0) >= 150)
@@ -121,8 +137,8 @@ export default function Stats() {
                 type="number"
                 step={m.step}
                 placeholder={m.placeholder}
-                value={saved[m.key] ?? ''}
-                onChange={e => setSaved(prev => ({ ...prev, [m.key]: e.target.value ? parseFloat(e.target.value) : undefined }))}
+                value={draft[m.key] ?? ''}
+                onChange={e => updateDraft(m.key, e.target.value ? parseFloat(e.target.value) : undefined)}
               />
             </div>
           ))}
@@ -149,8 +165,8 @@ export default function Stats() {
         <textarea
           className={styles.journalArea}
           placeholder="Write here... what went well, what was hard, what you're grateful for."
-          value={notes[t] || ''}
-          onChange={e => setNotes(prev => ({ ...prev, [t]: e.target.value }))}
+          value={note}
+          onChange={e => setNote(t, e.target.value)}
         />
       </div>
     </div>

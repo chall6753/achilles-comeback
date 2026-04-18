@@ -1,5 +1,5 @@
 import { PHASES } from '../data/phases'
-import { todayKey } from '../hooks/useStorage'
+import { todayKey } from '../hooks/useDb'
 import styles from './Timeline.module.css'
 
 function getPhaseStatus(p) {
