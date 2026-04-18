@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import Header from './components/Header'
+import Dashboard from './components/Dashboard'
 import Today from './components/Today'
 import Calendar from './components/Calendar'
 import Timeline from './components/Timeline'
@@ -8,6 +9,7 @@ import Stats from './components/Stats'
 import styles from './App.module.css'
 
 const TABS = [
+  { id: 'home',      label: '🏠 Home' },
   { id: 'today',     label: '📋 Today' },
   { id: 'calendar',  label: '🗓️ Calendar' },
   { id: 'timeline',  label: '📅 Timeline' },
@@ -16,7 +18,7 @@ const TABS = [
 ]
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState('today')
+  const [activeTab, setActiveTab] = useState('home')
 
   return (
     <div className={styles.app}>
@@ -33,6 +35,7 @@ export default function App() {
         ))}
       </nav>
       <main className={styles.main}>
+        {activeTab === 'home'      && <Dashboard />}
         {activeTab === 'today'     && <Today />}
         {activeTab === 'calendar'  && <Calendar />}
         {activeTab === 'timeline'  && <Timeline />}

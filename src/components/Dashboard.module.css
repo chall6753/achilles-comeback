@@ -1,0 +1,146 @@
+.wrap { display: flex; flex-direction: column; gap: 20px; }
+
+/* ── Hero ─────────────────────────────────────────────────────────── */
+.hero {
+  border-radius: 16px;
+  padding: 28px 32px;
+  color: #fff;
+  box-shadow: 0 4px 24px rgba(0,0,0,.18);
+}
+
+.heroTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+  gap: 20px;
+}
+
+.heroPhaseLabel {
+  font-size: .72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  margin-bottom: 6px;
+}
+
+.heroName {
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 10px;
+}
+
+.heroWin {
+  font-size: .88rem;
+  color: #CBD5E0;
+  font-style: italic;
+  line-height: 1.5;
+  max-width: 520px;
+}
+
+.heroDays { text-align: right; flex-shrink: 0; }
+.heroDayNum   { font-size: 3.2rem; font-weight: 800; line-height: 1; }
+.heroDayLabel { font-size: .72rem; color: #aaa; margin-top: 2px; }
+.heroDaysSub  { font-size: .7rem; color: #888; margin-top: 2px; }
+
+.heroBarWrap { margin-bottom: 20px; }
+.heroBarTrack {
+  background: rgba(255,255,255,.12);
+  border-radius: 999px;
+  height: 8px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+.heroBarFill { height: 100%; border-radius: 999px; transition: width .5s ease; }
+.heroBarMeta {
+  display: flex;
+  justify-content: space-between;
+  font-size: .68rem;
+  color: #888;
+}
+
+.heroMantra {
+  border-top: 1px solid;
+  padding-top: 16px;
+  font-size: .82rem;
+  color: #CBD5E0;
+  font-style: italic;
+  letter-spacing: .3px;
+  line-height: 1.6;
+}
+
+/* ── Quick stat chips ─────────────────────────────────────────────── */
+.chipRow {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+}
+
+.chip {
+  background: #fff;
+  border-radius: 12px;
+  padding: 18px 14px;
+  text-align: center;
+  box-shadow: 0 1px 4px rgba(0,0,0,.07);
+}
+
+.chipIcon  { font-size: 1.3rem; margin-bottom: 6px; }
+.chipNum   { font-size: 1.8rem; font-weight: 800; line-height: 1; }
+.chipLabel { font-size: .68rem; color: #999; margin-top: 5px; text-transform: uppercase; letter-spacing: .4px; }
+
+/* ── Section title ────────────────────────────────────────────────── */
+.sectionTitle {
+  font-size: .78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .6px;
+  color: #888;
+}
+
+/* ── Goal cards ───────────────────────────────────────────────────── */
+.goalsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.goalCard {
+  background: #fff;
+  border-radius: 12px;
+  padding: 18px 20px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.07);
+}
+
+.goalCat {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: .72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .6px;
+  margin-bottom: 12px;
+}
+
+.goalItem {
+  font-size: .87rem;
+  color: #444;
+  padding: 5px 0;
+  border-bottom: 1px solid #F5F5F5;
+  line-height: 1.45;
+}
+.goalItem:last-child { border: none; }
+
+/* ── Responsive ───────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .chipRow     { grid-template-columns: repeat(3, 1fr); }
+  .goalsGrid   { grid-template-columns: 1fr; }
+  .heroTop     { flex-direction: column; }
+  .heroDays    { text-align: left; }
+}
+@media (max-width: 600px) {
+  .hero        { padding: 20px; }
+  .heroName    { font-size: 1.2rem; }
+  .chipRow     { grid-template-columns: repeat(2, 1fr); }
+}
