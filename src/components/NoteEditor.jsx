@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import styles from './NoteEditor.module.css'
 
 /** Tiny markdown renderer: **bold** and leading - bullets only. */
@@ -34,15 +34,44 @@ function inlineBold(str) {
 
 export default function NoteEditor({ value, onChange, placeholder, minHeight = 120 }) {
   const [preview, setPreview] = useState(false)
+  // Local state so keystrokes are instant — DB write is debounced below
+  const [local, setLocal] = useState(value || '')
   const textareaRef = useRef(null)
+  const debounceRef = useRef(null)
+
+  // Sync inbound value changes (e.g. navigating to a different date)
+  // but don't overwrite what the user is actively typing.
+  useEffect(() => {
+    setLocal(value || '')
+  }, [value])
+
+  const flush = useCallback((val) => {
+    clearTimeout(debounceRef.current)
+    debounceRef.current = setTimeout(() => onChange(val), 400)
+  }, [onChange])
+
+  function handleChange(val) {
+    setLocal(val)
+    flush(val)
+  }
+
+  // Flush immediately on unmount so nothing is lost
+  useEffect(() => {
+    return () => {
+      clearTimeout(debounceRef.current)
+      // Call onChange synchronously with latest local value on unmount
+      if (textareaRef.current) onChange(textareaRef.current.value)
+    }
+  }, [onChange])
 
   function wrapSelection(before, after = before) {
     const el = textareaRef.current
     if (!el) return
-    const { selectionStart: s, selectionEnd: e, value: v } = el
+    const { selectionStart: s, selectionEnd: e } = el
+    const v = local
     const selected = v.slice(s, e)
     const next = v.slice(0, s) + before + selected + after + v.slice(e)
-    onChange(next)
+    handleChange(next)
     requestAnimationFrame(() => {
       el.focus()
       el.setSelectionRange(s + before.length, e + before.length)
@@ -52,40 +81,37 @@ export default function NoteEditor({ value, onChange, placeholder, minHeight = 1
   function insertBullet() {
     const el = textareaRef.current
     if (!el) return
-    const { selectionStart: s, value: v } = el
-    // find start of current line
+    const { selectionStart: s } = el
+    const v = local
     const lineStart = v.lastIndexOf('\n', s - 1) + 1
     const alreadyBullet = /^[-*]\s/.test(v.slice(lineStart))
-    let next
     if (alreadyBullet) {
-      next = v.slice(0, lineStart) + v.slice(lineStart + 2)
-      onChange(next)
+      const next = v.slice(0, lineStart) + v.slice(lineStart + 2)
+      handleChange(next)
       requestAnimationFrame(() => { el.focus(); el.setSelectionRange(s - 2, s - 2) })
     } else {
-      next = v.slice(0, lineStart) + '- ' + v.slice(lineStart)
-      onChange(next)
+      const next = v.slice(0, lineStart) + '- ' + v.slice(lineStart)
+      handleChange(next)
       requestAnimationFrame(() => { el.focus(); el.setSelectionRange(s + 2, s + 2) })
     }
   }
 
   function handleKeyDown(e) {
-    // Auto-continue bullet on Enter
     if (e.key === 'Enter') {
       const el = textareaRef.current
-      const { selectionStart: s, value: v } = el
+      const { selectionStart: s } = el
+      const v = local
       const lineStart = v.lastIndexOf('\n', s - 1) + 1
       const line = v.slice(lineStart, s)
       if (/^[-*]\s/.test(line)) {
+        e.preventDefault()
         if (line.trim() === '-' || line.trim() === '*') {
-          // empty bullet — remove it and stop list
-          e.preventDefault()
           const next = v.slice(0, lineStart) + '\n' + v.slice(s)
-          onChange(next)
+          handleChange(next)
           requestAnimationFrame(() => { el.focus(); el.setSelectionRange(lineStart + 1, lineStart + 1) })
         } else {
-          e.preventDefault()
           const next = v.slice(0, s) + '\n- ' + v.slice(s)
-          onChange(next)
+          handleChange(next)
           requestAnimationFrame(() => { el.focus(); el.setSelectionRange(s + 3, s + 3) })
         }
       }
@@ -95,7 +121,7 @@ export default function NoteEditor({ value, onChange, placeholder, minHeight = 1
   return (
     <div className={styles.wrap}>
       <div className={styles.toolbar}>
-        <button type="button" title="Bold (Ctrl+B)" className={styles.toolBtn} onMouseDown={e => { e.preventDefault(); wrapSelection('**') }}>
+        <button type="button" title="Bold" className={styles.toolBtn} onMouseDown={e => { e.preventDefault(); wrapSelection('**') }}>
           <b>B</b>
         </button>
         <button type="button" title="Bullet" className={styles.toolBtn} onMouseDown={e => { e.preventDefault(); insertBullet() }}>
@@ -111,7 +137,7 @@ export default function NoteEditor({ value, onChange, placeholder, minHeight = 1
         <div
           className={styles.preview}
           style={{ minHeight }}
-          dangerouslySetInnerHTML={{ __html: renderMarkdown(value || '') }}
+          dangerouslySetInnerHTML={{ __html: renderMarkdown(local) }}
         />
       ) : (
         <textarea
@@ -119,8 +145,8 @@ export default function NoteEditor({ value, onChange, placeholder, minHeight = 1
           className={styles.area}
           style={{ minHeight }}
           placeholder={placeholder}
-          value={value}
-          onChange={e => onChange(e.target.value)}
+          value={local}
+          onChange={e => handleChange(e.target.value)}
           onKeyDown={handleKeyDown}
         />
       )}
