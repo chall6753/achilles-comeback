@@ -31,3 +31,13 @@ db.version(1).stores({
   statsDrafts: 'date',
   meta:        'key',
 })
+
+db.version(2).stores({
+  tasks:           '[date+taskId], date, taskId',
+  notes:           'date',
+  scorecard:       '[date+habitIdx], date, habitIdx',
+  stats:           'date',
+  statsDrafts:     'date',
+  meta:            'key',
+  mentalResponses: '[date+taskId], date',
+})

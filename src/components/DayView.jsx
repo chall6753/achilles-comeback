@@ -3,6 +3,8 @@ import {
   toggleTask,
   useNote,
   setNote,
+  useMentalResponsesForDate,
+  setMentalResponse,
   todayKey,
   daysSince,
 } from '../hooks/useDb'
@@ -11,6 +13,7 @@ import {
   buildSections,
   getPhaseFor,
 } from '../data/dailyTasks'
+import NoteEditor from './NoteEditor'
 import styles from './Today.module.css'
 
 const SURGERY = '2026-04-24'
@@ -45,6 +48,37 @@ function TaskSection({ icon, title, items, prefix, saved, onToggle }) {
   )
 }
 
+function MentalTaskSection({ icon, title, items, prefix, saved, onToggle, responses, onResponse }) {
+  const done = items.filter((_, i) => saved[prefix + i]).length
+  return (
+    <div className={styles.section}>
+      <div className={styles.sectionHeader}>
+        <span className={styles.sectionIcon}>{icon}</span>
+        <span className={styles.sectionTitle}>{title}</span>
+        <span className={styles.sectionCount}>{done}/{items.length}</span>
+      </div>
+      {items.map((item, i) => {
+        const taskId = prefix + i
+        return (
+          <div key={i} className={`${styles.mentalItem} ${saved[taskId] ? styles.done : ''}`}>
+            <div className={styles.mentalTop}>
+              <input type="checkbox" checked={!!saved[taskId]} onChange={() => onToggle(taskId)} />
+              <label onClick={() => onToggle(taskId)}>{item}</label>
+            </div>
+            <input
+              className={styles.mentalInput}
+              type="text"
+              placeholder="Your response..."
+              value={responses[taskId] || ''}
+              onChange={e => onResponse(taskId, e.target.value)}
+            />
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
 /**
  * Renders the task list + notes for a single date.
  *
@@ -52,7 +86,8 @@ function TaskSection({ icon, title, items, prefix, saved, onToggle }) {
  * when a user clicks a day cell.
  */
 export default function DayView({ date }) {
-  const tasksForDay = useTasksForDate(date)
+  const tasksForDay  = useTasksForDate(date)
+  const mentalResps  = useMentalResponsesForDate(date)
   const note = useNote(date)
   const dayData = DAILY_TASKS[date]
   const phase = getPhaseFor(date)
@@ -123,26 +158,39 @@ export default function DayView({ date }) {
       </div>
 
       <div className={styles.grid}>
-        {sections.map(s => (
-          <TaskSection
-            key={s.prefix}
-            icon={s.icon}
-            title={s.title}
-            items={s.items}
-            prefix={s.prefix}
-            saved={tasksForDay}
-            onToggle={(key) => toggleTask(date, key)}
-          />
-        ))}
+        {sections.map(s =>
+          s.isMental ? (
+            <MentalTaskSection
+              key={s.prefix}
+              icon={s.icon}
+              title={s.title}
+              items={s.items}
+              prefix={s.prefix}
+              saved={tasksForDay}
+              onToggle={(key) => toggleTask(date, key)}
+              responses={mentalResps}
+              onResponse={(taskId, val) => setMentalResponse(date, taskId, val)}
+            />
+          ) : (
+            <TaskSection
+              key={s.prefix}
+              icon={s.icon}
+              title={s.title}
+              items={s.items}
+              prefix={s.prefix}
+              saved={tasksForDay}
+              onToggle={(key) => toggleTask(date, key)}
+            />
+          )
+        )}
       </div>
 
       <div className={styles.notesCard}>
         <div className={styles.notesTitle}>📝 Daily Notes</div>
-        <textarea
-          className={styles.notesArea}
-          placeholder="Notes for this day — what went well, what was hard, what you're grateful for..."
+        <NoteEditor
           value={note}
-          onChange={e => setNote(date, e.target.value)}
+          onChange={val => setNote(date, val)}
+          placeholder="Notes for this day — what went well, what was hard, what you're grateful for..."
         />
       </div>
     </div>

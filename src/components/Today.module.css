@@ -32,4 +32,25 @@
 .notesArea  { width: 100%; min-height: 100px; padding: 12px; border: 1px solid #E0E3E8; border-radius: 8px; font-size: .9rem; resize: vertical; }
 .notesArea:focus { outline: none; border-color: #E94560; }
 
+/* Mental task items */
+.mentalItem { padding: 10px 0; border-bottom: 1px solid #F8F8F8; }
+.mentalItem:last-child { border-bottom: none; }
+.mentalTop  { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 6px; }
+.mentalTop input { margin-top: 2px; width: 16px; height: 16px; accent-color: #27AE60; flex-shrink: 0; cursor: pointer; }
+.mentalTop label { font-size: .88rem; color: #333; line-height: 1.5; cursor: pointer; }
+.mentalItem.done .mentalTop label { text-decoration: line-through; color: #bbb; }
+.mentalInput {
+  width: 100%;
+  padding: 7px 10px;
+  border: 1px solid #E8F5E9;
+  border-radius: 6px;
+  font-size: .85rem;
+  font-family: inherit;
+  background: #F6FBF6;
+  color: #333;
+  box-sizing: border-box;
+}
+.mentalInput:focus { outline: none; border-color: #27AE60; background: #fff; }
+.mentalInput::placeholder { color: #aaa; }
+
 @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }

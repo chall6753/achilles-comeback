@@ -18,10 +18,10 @@ export const DAILY_TASKS = { ...PRE_SURGERY_TASKS, ...M1_TASKS }
  * `color` is used by the calendar's completion bars.
  */
 export const CATEGORIES = [
-  { key: 'physical',  prefix: 'p', icon: '🏥', title: 'PT / Physical',         color: '#E74C3C' },
-  { key: 'study',     prefix: 's', icon: '📚', title: 'Study / Professional',  color: '#9B59B6' },
-  { key: 'logistics', prefix: 'l', icon: '📦', title: 'Logistics',             color: '#E67E22' },
-  { key: 'mental',    prefix: 'm', icon: '🧠', title: 'Mental + Personal',     color: '#27AE60' },
+  { key: 'physical',  prefix: 'p', icon: '🏥', title: 'PT / Physical',         color: '#E74C3C', isMental: false },
+  { key: 'study',     prefix: 's', icon: '📚', title: 'Study / Professional',  color: '#9B59B6', isMental: false },
+  { key: 'logistics', prefix: 'l', icon: '📦', title: 'Logistics',             color: '#E67E22', isMental: false },
+  { key: 'mental',    prefix: 'm', icon: '🧠', title: 'Mental + Personal',     color: '#27AE60', isMental: true  },
 ]
 
 export function getPhaseFor(date) {

@@ -9,9 +9,11 @@ import {
   useNotesByDate,
   setNote,
   useTasksByDate,
+  useMentalResponsesByDate,
   todayKey,
   daysSince,
 } from '../hooks/useDb'
+import NoteEditor from './NoteEditor'
 import styles from './Stats.module.css'
 
 Chart.register(LineController, LineElement, PointElement, LinearScale, CategoryScale, Filler, Tooltip)
@@ -24,6 +26,7 @@ const METRICS = [
   { key: 'pain',    label: 'Pain Level (0–10)',      color: '#E74C3C', placeholder: '4',    step: '1'   },
   { key: 'protein', label: 'Protein (g)',            color: '#E67E22', placeholder: '160',  step: '1'   },
   { key: 'study',   label: 'Study (hrs)',            color: '#9B59B6', placeholder: '2',    step: '0.5' },
+  { key: 'pages',   label: 'Pages Read',             color: '#1ABC9C', placeholder: '20',   step: '1'   },
 ]
 
 function MiniChart({ metric, data, labels }) {
@@ -69,11 +72,12 @@ function MiniChart({ metric, data, labels }) {
 
 export default function Stats() {
   const t = todayKey()
-  const statsData = useStatsByDate()
-  const draft     = useStatsDraft(t)
-  const note      = useNote(t)
-  const notes     = useNotesByDate()
-  const tasks     = useTasksByDate()
+  const statsData      = useStatsByDate()
+  const draft          = useStatsDraft(t)
+  const note           = useNote(t)
+  const notes          = useNotesByDate()
+  const tasks          = useTasksByDate()
+  const mentalByDate   = useMentalResponsesByDate()
 
   const days = Math.max(0, daysSince(SURGERY))
   const recentKeys = Object.keys(statsData).sort().slice(-30)
@@ -162,13 +166,32 @@ export default function Stats() {
       {/* Journal */}
       <div className={styles.journalCard}>
         <div className={styles.journalTitle}>📝 Journal — {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}</div>
-        <textarea
-          className={styles.journalArea}
-          placeholder="Write here... what went well, what was hard, what you're grateful for."
+        <NoteEditor
           value={note}
-          onChange={e => setNote(t, e.target.value)}
+          onChange={val => setNote(t, val)}
+          placeholder="Write here... what went well, what was hard, what you're grateful for."
+          minHeight={140}
         />
       </div>
+
+      {/* Mind Log */}
+      {Object.keys(mentalByDate).length > 0 && (
+        <div className={styles.journalCard}>
+          <div className={styles.journalTitle}>🧠 Mind Log</div>
+          <div className={styles.mindLog}>
+            {Object.keys(mentalByDate).sort().reverse().map(date => (
+              <div key={date} className={styles.mindDay}>
+                <div className={styles.mindDayLabel}>
+                  {new Date(date + 'T00:00:00Z').toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', timeZone: 'UTC' })}
+                </div>
+                {Object.values(mentalByDate[date]).map((response, i) => (
+                  <div key={i} className={styles.mindEntry}>"{response}"</div>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   )
 }

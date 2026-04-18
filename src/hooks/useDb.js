@@ -178,3 +178,47 @@ export async function setStatsDraft(date, values) {
 export async function commitStatsDraft(date, values) {
   await db.stats.put({ date, ...values })
 }
+
+/* ------------------------------------------------------------------ */
+/* mental responses                                                    */
+/* ------------------------------------------------------------------ */
+
+/** { [taskId]: string } for a single date. */
+export function useMentalResponsesForDate(date) {
+  return useLiveQuery(
+    async () => {
+      const rows = await db.mentalResponses.where('date').equals(date).toArray()
+      const map = {}
+      for (const r of rows) map[r.taskId] = r.response || ''
+      return map
+    },
+    [date],
+    {},
+  )
+}
+
+/** { [date]: { [taskId]: string } } — full history for the Mind Log. */
+export function useMentalResponsesByDate() {
+  return useLiveQuery(
+    async () => {
+      const rows = await db.mentalResponses.toArray()
+      const byDate = {}
+      for (const r of rows) {
+        if (!r.response) continue
+        if (!byDate[r.date]) byDate[r.date] = {}
+        byDate[r.date][r.taskId] = r.response
+      }
+      return byDate
+    },
+    [],
+    {},
+  )
+}
+
+export async function setMentalResponse(date, taskId, response) {
+  if (response && response.trim()) {
+    await db.mentalResponses.put({ date, taskId, response })
+  } else {
+    await db.mentalResponses.delete([date, taskId])
+  }
+}

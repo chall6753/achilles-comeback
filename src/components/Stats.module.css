@@ -23,5 +23,10 @@
 .journalArea  { width: 100%; min-height: 120px; padding: 12px; border: 1px solid #E0E3E8; border-radius: 8px; font-size: .9rem; resize: vertical; }
 .journalArea:focus { outline: none; border-color: #E94560; }
 
+.mindLog     { display: flex; flex-direction: column; gap: 18px; }
+.mindDay     { border-left: 3px solid #27AE60; padding-left: 14px; }
+.mindDayLabel { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: #888; margin-bottom: 8px; }
+.mindEntry   { font-size: .88rem; color: #444; font-style: italic; padding: 4px 0; line-height: 1.5; }
+
 @media (max-width: 900px) { .streakRow { grid-template-columns: 1fr 1fr; } .chartsGrid { grid-template-columns: 1fr; } .inputGrid { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 600px) { .streakRow, .inputGrid { grid-template-columns: 1fr 1fr; } }
