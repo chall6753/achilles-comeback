@@ -3,6 +3,7 @@ import Header from './components/Header'
 import Dashboard from './components/Dashboard'
 import Today from './components/Today'
 import Calendar from './components/Calendar'
+import Journal from './components/Journal'
 import Timeline from './components/Timeline'
 import Scorecard from './components/Scorecard'
 import Stats from './components/Stats'
@@ -12,6 +13,7 @@ const TABS = [
   { id: 'home',      label: '🏠 Home' },
   { id: 'today',     label: '📋 Today' },
   { id: 'calendar',  label: '🗓️ Calendar' },
+  { id: 'journal',   label: '📝 Journal' },
   { id: 'timeline',  label: '📅 Timeline' },
   { id: 'scorecard', label: '☑️ Scorecard' },
   { id: 'stats',     label: '📊 Stats' },
@@ -38,6 +40,7 @@ export default function App() {
         {activeTab === 'home'      && <Dashboard />}
         {activeTab === 'today'     && <Today />}
         {activeTab === 'calendar'  && <Calendar />}
+        {activeTab === 'journal'   && <Journal />}
         {activeTab === 'timeline'  && <Timeline />}
         {activeTab === 'scorecard' && <Scorecard />}
         {activeTab === 'stats'     && <Stats />}

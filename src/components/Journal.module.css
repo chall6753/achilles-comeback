@@ -1,0 +1,73 @@
+.wrap { display: flex; flex-direction: column; gap: 20px; }
+
+/* Today card */
+.todayCard {
+  background: #fff;
+  border-radius: 12px;
+  padding: 22px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.07);
+  border-top: 3px solid #E94560;
+}
+.todayHeader  { display: flex; align-items: baseline; gap: 12px; margin-bottom: 14px; }
+.todayLabel   { font-size: 1rem; font-weight: 800; color: #1A1A2E; }
+.todayDate    { font-size: .78rem; color: #aaa; }
+
+/* Past section */
+.pastSectionTitle {
+  font-size: .72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .6px;
+  color: #aaa;
+  margin-bottom: 12px;
+}
+
+/* Past entry cards */
+.pastCard {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.07);
+}
+
+.pastHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.pastDate { font-size: .82rem; font-weight: 700; color: #555; }
+
+.editBtn {
+  background: none;
+  border: 1px solid #E0E3E8;
+  border-radius: 6px;
+  padding: 3px 12px;
+  font-size: .72rem;
+  font-weight: 600;
+  color: #888;
+  cursor: pointer;
+}
+.editBtn:hover { background: #F4F6F9; color: #333; }
+.editBtnActive { background: #1A1A2E; color: #fff; border-color: #1A1A2E; }
+.editBtnActive:hover { background: #2d2d4e; }
+
+/* Rendered past entry body */
+.pastBody { font-size: .88rem; color: #444; line-height: 1.7; }
+.pastBody p  { margin: 0 0 6px; }
+.pastBody ul { margin: 4px 0 8px; padding-left: 20px; }
+.pastBody li { margin-bottom: 3px; }
+.pastBody br { display: block; content: ''; margin: 3px 0; }
+.pastBody strong { font-weight: 700; }
+
+/* Past section wrapper */
+.pastSection { display: flex; flex-direction: column; gap: 14px; }
+
+/* Empty state */
+.empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: #bbb;
+  font-size: .88rem;
+}

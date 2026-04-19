@@ -5,15 +5,12 @@ import {
   useStatsDraft,
   setStatsDraft,
   commitStatsDraft,
-  useNote,
   useNotesByDate,
-  setNote,
   useTasksByDate,
   useMentalResponsesByDate,
   todayKey,
   daysSince,
 } from '../hooks/useDb'
-import NoteEditor from './NoteEditor'
 import { buildSections } from '../data/dailyTasks'
 import styles from './Stats.module.css'
 
@@ -83,7 +80,6 @@ export default function Stats() {
   const t = todayKey()
   const statsData      = useStatsByDate()
   const draft          = useStatsDraft(t)
-  const note           = useNote(t)
   const notes          = useNotesByDate()
   const tasks          = useTasksByDate()
   const mentalByDate   = useMentalResponsesByDate()
@@ -170,17 +166,6 @@ export default function Stats() {
             data={recentKeys.map(k => statsData[k]?.[m.key] ?? null)}
           />
         ))}
-      </div>
-
-      {/* Journal */}
-      <div className={styles.journalCard}>
-        <div className={styles.journalTitle}>📝 Journal — {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}</div>
-        <NoteEditor
-          value={note}
-          onChange={val => setNote(t, val)}
-          placeholder="Write here... what went well, what was hard, what you're grateful for."
-          minHeight={140}
-        />
       </div>
 
       {/* Mind Log */}
