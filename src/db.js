@@ -53,3 +53,16 @@ db.version(3).stores({
   dayTaskOverrides:  '[date+prefix], date',
   phaseGoalOverrides:'[phaseId+cat], phaseId',
 })
+
+db.version(4).stores({
+  tasks:             '[date+taskId], date, taskId',
+  notes:             'date',
+  scorecard:         '[date+habitIdx], date, habitIdx',
+  stats:             'date',
+  statsDrafts:       'date',
+  meta:              'key',
+  mentalResponses:   '[date+taskId], date',
+  dayTaskOverrides:  '[date+prefix], date',
+  phaseGoalOverrides:'[phaseId+cat], phaseId',
+  proteinEntries:    '[date+id], date',
+})

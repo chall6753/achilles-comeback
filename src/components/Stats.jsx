@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import { Chart, LineController, LineElement, PointElement, LinearScale, CategoryScale, Filler, Tooltip } from 'chart.js'
 import {
   useStatsByDate,
@@ -8,6 +8,9 @@ import {
   useNotesByDate,
   useTasksByDate,
   useMentalResponsesByDate,
+  useProteinEntries,
+  addProteinEntry,
+  removeProteinEntry,
   todayKey,
   daysSince,
 } from '../hooks/useDb'
@@ -76,6 +79,73 @@ function MiniChart({ metric, data, labels }) {
   )
 }
 
+function ProteinLog({ date }) {
+  const entries = useProteinEntries(date) || []
+  const [food, setFood] = useState('')
+  const [grams, setGrams] = useState('')
+
+  const total = entries.reduce((s, e) => s + (Number(e.grams) || 0), 0)
+
+  function add() {
+    const f = food.trim()
+    const g = parseFloat(grams)
+    if (!f || !Number.isFinite(g) || g <= 0) return
+    addProteinEntry(date, f, g)
+    setFood('')
+    setGrams('')
+  }
+
+  function onKey(e) {
+    if (e.key === 'Enter') add()
+  }
+
+  return (
+    <div className={styles.inputCard}>
+      <div className={styles.proteinHeader}>
+        <div className={styles.inputTitle}>Protein Log</div>
+        <div className={styles.proteinTotal}>{total}g</div>
+      </div>
+      <div className={styles.proteinAddRow}>
+        <input
+          className={styles.proteinFoodInput}
+          type="text"
+          placeholder="Food (e.g. chicken breast)"
+          value={food}
+          onChange={e => setFood(e.target.value)}
+          onKeyDown={onKey}
+        />
+        <input
+          className={styles.proteinGramsInput}
+          type="number"
+          step="1"
+          placeholder="grams"
+          value={grams}
+          onChange={e => setGrams(e.target.value)}
+          onKeyDown={onKey}
+        />
+        <button className={styles.proteinAddBtn} onClick={add}>Add</button>
+      </div>
+      {entries.length === 0 ? (
+        <div className={styles.proteinEmpty}>No entries yet — log what you ate to build today's total.</div>
+      ) : (
+        <ul className={styles.proteinList}>
+          {entries.map(e => (
+            <li key={e.id} className={styles.proteinEntry}>
+              <span className={styles.proteinFood}>{e.food}</span>
+              <span className={styles.proteinGrams}>{e.grams}g</span>
+              <button
+                className={styles.proteinRemoveBtn}
+                onClick={() => removeProteinEntry(date, e.id)}
+                aria-label={`Remove ${e.food}`}
+              >×</button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  )
+}
+
 export default function Stats() {
   const t = todayKey()
   const statsData      = useStatsByDate()
@@ -139,7 +209,7 @@ export default function Stats() {
           Log Today's Numbers — {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
         </div>
         <div className={styles.inputGrid}>
-          {METRICS.map(m => (
+          {METRICS.filter(m => m.key !== 'protein').map(m => (
             <div key={m.key} className={styles.inputGroup}>
               <label>{m.label}</label>
               <input
@@ -155,6 +225,9 @@ export default function Stats() {
         <button className={styles.saveBtn} onClick={save}>Save Today's Log</button>
         <span id="toastMsg" className={styles.toast}>Saved ✓</span>
       </div>
+
+      {/* Protein log — auto-syncs total into stats.protein */}
+      <ProteinLog date={t} />
 
       {/* Charts */}
       <div className={styles.chartsGrid}>

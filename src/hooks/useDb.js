@@ -177,10 +177,60 @@ export async function setStatsDraft(date, values) {
 
 /**
  * Promote the current draft to the permanent `stats` table
- * (used when the user clicks "Save Today's Log").
+ * (used when the user clicks "Save Today's Log"). Merges with the
+ * existing row so fields managed outside the draft (e.g. `protein`,
+ * which is auto-summed from proteinEntries) are not clobbered.
  */
 export async function commitStatsDraft(date, values) {
-  await db.stats.put({ date, ...values })
+  const existing = await db.stats.get(date)
+  await db.stats.put({ ...(existing || {}), date, ...values })
+}
+
+/* ------------------------------------------------------------------ */
+/* protein entries                                                     */
+/* ------------------------------------------------------------------ */
+
+/** Sorted entries for one date: [{ id, food, grams }, ...]. */
+export function useProteinEntries(date) {
+  return useLiveQuery(
+    async () => {
+      const rows = await db.proteinEntries.where('date').equals(date).toArray()
+      return rows.sort((a, b) => a.id.localeCompare(b.id))
+    },
+    [date],
+    [],
+  )
+}
+
+async function syncProteinTotal(date) {
+  const rows = await db.proteinEntries.where('date').equals(date).toArray()
+  const total = rows.reduce((s, r) => s + (Number(r.grams) || 0), 0)
+  const existing = await db.stats.get(date)
+  await db.stats.put({ ...(existing || {}), date, protein: total })
+}
+
+function newEntryId() {
+  return `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
+}
+
+export async function addProteinEntry(date, food, grams) {
+  const id = newEntryId()
+  await db.proteinEntries.put({ date, id, food, grams: Number(grams) || 0 })
+  await syncProteinTotal(date)
+}
+
+export async function updateProteinEntry(date, id, patch) {
+  const existing = await db.proteinEntries.get([date, id])
+  if (!existing) return
+  const next = { ...existing, ...patch }
+  if (patch.grams !== undefined) next.grams = Number(patch.grams) || 0
+  await db.proteinEntries.put(next)
+  await syncProteinTotal(date)
+}
+
+export async function removeProteinEntry(date, id) {
+  await db.proteinEntries.delete([date, id])
+  await syncProteinTotal(date)
 }
 
 /* ------------------------------------------------------------------ */

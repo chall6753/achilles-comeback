@@ -14,6 +14,23 @@
 .saveBtn:hover { background: #2d2d4e; }
 .toast { font-size: .85rem; color: #27AE60; font-weight: 600; opacity: 0; transition: opacity .3s; }
 
+.proteinHeader   { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 14px; }
+.proteinTotal    { font-size: 1.6rem; font-weight: 800; color: #E67E22; }
+.proteinAddRow   { display: grid; grid-template-columns: 1fr 110px auto; gap: 10px; margin-bottom: 14px; }
+.proteinFoodInput,
+.proteinGramsInput { padding: 10px 12px; border: 1px solid #E0E3E8; border-radius: 8px; font-size: .95rem; font-weight: 600; }
+.proteinFoodInput:focus,
+.proteinGramsInput:focus { outline: none; border-color: #E67E22; }
+.proteinAddBtn   { padding: 0 18px; background: #E67E22; color: #fff; border: none; border-radius: 8px; font-size: .85rem; font-weight: 700; cursor: pointer; }
+.proteinAddBtn:hover { background: #d46e15; }
+.proteinEmpty    { font-size: .85rem; color: #999; padding: 8px 2px; }
+.proteinList     { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 6px; }
+.proteinEntry    { display: grid; grid-template-columns: 1fr auto auto; align-items: center; gap: 12px; padding: 10px 12px; background: #FAFAF7; border-radius: 8px; }
+.proteinFood     { font-size: .92rem; font-weight: 600; color: #333; }
+.proteinGrams    { font-size: .9rem; font-weight: 700; color: #E67E22; }
+.proteinRemoveBtn { width: 26px; height: 26px; border: none; border-radius: 50%; background: transparent; color: #999; font-size: 1.1rem; line-height: 1; cursor: pointer; }
+.proteinRemoveBtn:hover { background: #F5E6E6; color: #E94560; }
+
 .chartsGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
 .chartCard  { background: #fff; border-radius: 12px; padding: 18px; box-shadow: 0 1px 4px rgba(0,0,0,.07); }
 .chartTitle { font-size: .85rem; font-weight: 700; margin-bottom: 12px; }
